@@ -6,10 +6,70 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+
+model Posts {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  country   String
+  city      String
+  lat       Float?
+  lon       Float?
+  isLocal   Boolean   @default(false)
+  tags      String?   @default("")
+  likes     Int?      @default(0)
+  dislikes  Int?      @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  author    String
+
+  medias    Medias[]
+  comments  Comments[]
+}
+
+model Medias {
+  id        Int      @id @default(autoincrement())
+  url       String
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  postId    Int?
+  post      Posts?   @relation(fields: [postId], references: [id])
+}
+
+model Comments {
+  id        Int       @id @default(autoincrement())
+  content   String
+  author    String
+  likes     Int       @default(0)
+  dislikes  Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  postId    Int
+  post      Posts     @relation(fields: [postId], references: [id])
+
+  replies   Replies[]
+}
+
+model Replies {
+  id        Int       @id @default(autoincrement())
+  content   String
+  author    String
+  likes     Int       @default(0)
+  dislikes  Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  commentId Int
+  comment   Comments  @relation(fields: [commentId], references: [id])
 }

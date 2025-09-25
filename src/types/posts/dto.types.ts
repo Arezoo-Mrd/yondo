@@ -83,24 +83,35 @@ class CommentDto {
 
 }
 
-export enum Tags {
-    ALL = "all",
-    YOUR_FOLLOWERS = "yourFollowers",
-    YOUR_FOLLOWING = "yourFollowing",
-    YOUR_POSTS = "yourPosts",
-    YOUR_LIKES = "yourLikes",
-    YOUR_DISLIKES = "yourDislikes",
+// 
 
-    YOUR_COMMENTS = "yourComments",
-    YOUR_REPLIES = "yourReplies",
-    YOUR_MENTIONS = "yourMentions",
-    YOUR_BOOKMARKS = "yourBookmarks",
-    YOUR_SAVED = "yourSaved",
-    YOUR_TAGGED = "yourTagged"
+
+export interface LocationType {
+    country: string,
+    city: string,
+    lat: number | null,
+    lon: number | null,
+    isLocal: true
 }
 
 
+export class CreatePostWithFilesDto {
+    @ApiProperty({ type: 'string', format: 'binary', description: 'Upload one or multiple files' })
+    files?: any;
 
+    @ApiProperty({ description: 'The title of the post' })
+    @IsString()
+    title: string;
+
+    @ApiProperty({ description: 'The content of the post' })
+    @IsString()
+    content: string;
+
+    @ApiProperty({ description: 'The tags of the post' })
+    @IsString()
+    @IsOptional()
+    tags?: string;
+}
 
 export class CreatePostDto {
     @ApiProperty({ description: 'The title of the post' })
@@ -113,24 +124,11 @@ export class CreatePostDto {
 
     @ApiProperty({ description: 'The medias of the post', type: [MediaDto] })
     @IsArray()
-    medias: MediaDto[];
+    medias?: MediaDto[];
 
-    @ApiProperty({ description: 'The tags of the post', enum: Tags })
-    @IsEnum(Tags)
-    tags: Tags;
-
-    @ApiProperty({ description: 'The number of likes of the post' })
-    @IsNumber()
-    likes: number;
-
-    @ApiProperty({ description: 'The number of dislikes of the post' })
-    @IsNumber()
-    dislikes: number;
-
-    @ApiProperty({ description: 'The comments of the post', type: [CommentDto] })
-    @IsArray()
-    comments: CommentDto[];
-
+    @ApiProperty({ description: 'The tags of the post' })
+    @IsString()
+    tags: string;
 }
 
 export type UpdatePostDto = {
@@ -189,21 +187,7 @@ export class PostDto {
 
     @ApiProperty({ description: 'The location of the post' })
     @IsObject()
-    location: LocationDto;
-
-    @ApiProperty({ description: 'The number of likes of the post' })
-    @IsNumber()
-    likes: number;
-
-    @ApiProperty({ description: 'The number of dislikes of the post' })
-    @IsNumber()
-    dislikes: number;
-
-    // TODO: Think about the comments structure
-
-    @ApiProperty({ description: 'The comments of the post' })
-    @IsArray()
-    comments: CommentDto[];
+    location: LocationType;
 
     @ApiProperty({ description: 'The created at of the post' })
     @IsDate()
